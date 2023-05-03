@@ -1,7 +1,6 @@
-export const processVideoTitle = (input) => {
+export const idFromUrl = (input) => {
   let result = input;
-  result = result.split('(')[0].trim();
-  result = result.split('(')[0].trim();
-  result = result.split('[')[0].trim();
+  result = result.replace('https://soundcloud.com/', '');
+  result = result.replace('/', '-');
   return result;
 };

@@ -10,6 +10,6 @@
     "colors": "^1.4.0",
     "dotenv": "^16.0.3",
     "editly": "^0.14.2",
-    "ytdl-core": "4.11.2"
+    "soundcloud-downloader": "^1.0.0"
   }
 }
