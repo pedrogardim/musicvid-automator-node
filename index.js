@@ -7,4 +7,5 @@ import { download } from './src/fetch.js';
 // fetchAllVideosFromChannel()
 
 await init();
-download('https://soundcloud.com/markvard/vacation');
+// download('https://soundcloud.com/thorpey/thorpey-rock-with-you-free-download');
+generateVideo('fenorofficialdj-cano-que-bonita-fer-gomez-rumbaton-mashup');

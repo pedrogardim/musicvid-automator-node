@@ -1,50 +1,37 @@
 import editly from 'editly';
-
-//TODO draw spectrum after decoding audio
-async function func({ canvas }) {
-  async function onRender(progress) {
-    const context = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = 40 * (1 + progress * 0.5);
-    //frame = progress * duration * fps;
-
-    context.beginPath();
-    context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    context.fillStyle = 'hsl(350, 100%, 37%)';
-    context.fill();
-    context.lineWidth = 5;
-    context.strokeStyle = '#ffffff';
-    context.stroke();
-  }
-
-  function onClose() {
-    // Cleanup if you initialized anything
-  }
-
-  return { onRender, onClose };
-}
+import { drawSpectrum } from './utils/spectrum.js';
+import { generateSpectrumFrames } from './utils/audio.js';
 
 export const generateVideo = async (id) => {
+  console.log('B > Video starting → '.yellow + id.magenta);
+
+  const { frames, duration } = await generateSpectrumFrames(id);
+
+  console.log(frames, duration);
+
   const editSpec = {
-    outPath: '../output/c/out.mp4',
+    outPath: `output/b/${id}.mp4`,
     width: 1280,
     height: 720,
     fps: 30,
-    allowRemoteRequests: false,
+    allowRemoteRequests: true,
     clips: [
       {
-        duration: 20,
+        duration: 10,
+        // duration,
         layers: [
-          { type: 'image', path: 'pic.png', zoomAmount: 0 },
+          { type: 'image', path: 'assets/pic.jpg', zoomAmount: 0 },
+          // {
+          //   type: 'title',
+          //   text: 'Test',
+          //   fontPath: 'assets/fonts/urbanist.ttf',
+          //   textColor: '#FF0000',
+          //   zoomAmount: 0,
+          // },
           {
-            type: 'title',
-            text: 'Test',
-            fontPath: 'fonts/urbanist.ttf',
-            textColor: '#FF0000',
-            zoomAmount: 0,
+            type: 'canvas',
+            func: ({ canvas }) => drawSpectrum({ canvas }, frames, duration),
           },
-          //   { type: 'canvas', func },
         ],
       },
     ],
@@ -52,7 +39,7 @@ export const generateVideo = async (id) => {
     // outputVolume: 1,
     audioTracks: [
       {
-        path: '../output/a/s88r_q7oufE.webm',
+        path: `output/a/${id}.mp3`,
         mixVolume: 1,
       },
     ],
@@ -67,4 +54,5 @@ export const generateVideo = async (id) => {
 
   // See editSpec documentation
   await editly(editSpec);
+  console.log('B > Video finished ✅ → '.underline.yellow + id.magenta);
 };
