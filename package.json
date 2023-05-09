@@ -6,13 +6,14 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "audio-decode": "^2.1.3",
     "axios": "^1.4.0",
     "colors": "^1.4.0",
     "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "fluent-ffmpeg": "^2.1.2",
     "soundcloud-downloader": "^1.0.0"
   }
