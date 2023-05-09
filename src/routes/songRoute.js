@@ -3,7 +3,7 @@ import { addSong, getSong, searchSong } from '../controllers/songController.js';
 
 const router = express.Router();
 
-router.post('/', addSong);
+router.put('/', addSong);
 router.get('/', getSong);
 router.get('/search/:query', searchSong);
 
