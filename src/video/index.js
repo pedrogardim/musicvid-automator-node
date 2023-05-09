@@ -1,4 +1,5 @@
-import { generateFftFrames } from './spectrum/index.js';
+// import { generateFftFrames } from './spectrum/index.js';
+import { generateFftFrames } from './fft/index.js';
 import { drawSpectrum } from './canvas/index.js';
 import editly from 'editly';
 
@@ -8,7 +9,7 @@ export const createVideo = async (id) => {
   const { fttFrames, audioDuration, framesCount } = await generateFftFrames(
     `output/a/${id}.mp3`
   );
-
+  return;
   const editSpec = {
     outPath: `output/b/${id}.mp4`,
     width: 1280,
