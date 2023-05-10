@@ -17,18 +17,17 @@ express()
 
 const wss = new WebSocketServer({ port: 8080 });
 
-export let ws;
+export let webSocket;
 
 wss.on('connection', (ws) => {
   ws.on('error', console.error);
 
-  ws = ws;
+  webSocket = ws;
 
   ws.on('message', (data) => {
     const parsedData = JSON.parse(data);
-    console.log(parsedData);
     if (parsedData.type === 'newSong') {
-      initSongProcess({ ...parsedData, ws });
+      initSongProcess(parsedData);
     }
   });
 });

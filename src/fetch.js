@@ -1,19 +1,15 @@
 import fs from 'fs';
-import axios from 'axios';
 import dotenv from 'dotenv';
-
 import scdl from 'soundcloud-downloader';
 
-import { task } from './setup.js';
-import { idFromUrl } from './utils/text.js';
-import { generateVideo } from './edit.js';
+import { webSocket } from '../app.js';
 
 dotenv.config();
 
-export const download = async (url) =>
+export const download = async (url, id) =>
   new Promise((resolve, reject) => {
-    const id = idFromUrl(url);
-    console.log('A > Starting download → '.brightGreen + id.magenta);
+    console.log('A > Starting download → ' + id);
+    webSocket.send(JSON.stringify({ type: 'downloadStart', id }));
     scdl.default.download(url).then((stream) =>
       stream
         .pipe(fs.createWriteStream(`output/a/${id}.mp3`))
@@ -22,10 +18,8 @@ export const download = async (url) =>
           reject();
         })
         .on('finish', () => {
-          console.log(
-            'A > Download finished ✅ → '.underline.brightGreen + id.magenta
-          );
-          generateVideo(id);
+          console.log('A > Download finished ✅ → ' + id);
+          webSocket.send(JSON.stringify({ type: 'downloadFinish', id }));
           resolve();
         })
     );

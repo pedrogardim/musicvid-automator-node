@@ -11,8 +11,9 @@
       let el;
 
       webSocket.onmessage = (event) => {
-        el = document.getElementById('time');
-        el.innerHTML = 'Current time on server is: ' + event.data;
+        el = document.getElementById('message');
+        el.innerHTML = event.data;
+        handleMessage(JSON.parse(event.data));
       };
 
       const send = () => {
@@ -21,6 +22,32 @@
           obj[key] = document.getElementById(key).value;
         });
         webSocket.send(JSON.stringify(obj));
+      };
+
+      const handleMessage = (message) => {
+        const { type, author, title, id } = message;
+        if (type === 'init') {
+          const songId = author + '_' + title;
+          const li = document.createElement('li');
+          li.className =
+            'list-group-item d-flex justify-content-between align-items-center';
+          li.innerHTML = author + ' - ' + title;
+          li.id = songId + 'cont';
+          const span = document.createElement('span');
+          span.className = 'badge bg-primary rounded-pill';
+          span.innerHTML = 'Empezando...';
+          span.id = songId;
+          li.appendChild(span);
+          document.getElementById('list-container').appendChild(li);
+        }
+        if (type === 'downloadStart') {
+          const span = document.getElementById(id);
+          span.innerHTML = 'Descargando';
+        }
+        if (type === 'downloadFinish') {
+          const span = document.getElementById(id);
+          span.innerHTML = 'Descargado ✅';
+        }
       };
     </script>
   </head>
@@ -77,8 +104,15 @@
       >
         Añadir
       </button>
-      <ul class="list-group mt-4">
-        <li
+      <span
+        id="message"
+        class=""
+      ></span>
+      <ul
+        id="list-container"
+        class="list-group mt-4"
+      >
+        <!--  <li
           class="list-group-item d-flex justify-content-between align-items-center"
         >
           A list item
@@ -95,9 +129,8 @@
         >
           A third list item
           <span class="badge bg-primary rounded-pill">1</span>
-        </li>
+        </li> -->
       </ul>
-      <p id="time"></p>
     </div>
   </body>
 </html>

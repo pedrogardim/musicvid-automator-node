@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 
 export const generateVideo = async (id) => {
-  console.log('B > Video starting → '.yellow + id.magenta);
+  console.log('B > Video starting → ' + id);
 
   const args = [
     '-y',
@@ -55,13 +55,15 @@ export const generateVideo = async (id) => {
     const message = data.toString();
     // console.log(message);
     // return;
-    if (message.includes('frame=')) console.log(message.green);
+    if (message.includes('frame=')) {
+      console.log(message.slice(6, 10));
+    }
     if (
       message.includes('cannot') ||
       message.includes('Error') ||
       message.includes('Invalid')
     )
-      console.log('❌' + message.red);
+      console.log('❌' + message);
   });
 
   await new Promise((resolve, reject) => {
@@ -71,12 +73,8 @@ export const generateVideo = async (id) => {
     ffmpeg.on('exit', resolve);
   });
 
-  console.log('B > Video finished ✅ → '.underline.yellow + id.magenta);
+  console.log('B > Video finished ✅ → ' + id);
   console.log(
-    String(
-      'Took ' +
-        new Date(Date.now() - startDate).toTimeString().slice(3, 8) +
-        's'
-    ).italic.yellow
+    'Took ' + new Date(Date.now() - startDate).toTimeString().slice(3, 8) + 's'
   );
 };

@@ -1,19 +1,29 @@
 import { readFile } from 'fs/promises';
-import { writeJson } from './utils/json.js';
-import { ws } from '../app.js';
-
-export let task = {};
+import { webSocket } from '../app.js';
+import { download } from './fetch.js';
+import { generateVideo } from './video.js';
 
 export const initSongProcess = async ({ link, title, author, genre }) => {
-  console.log(link, title, author, genre);
-  console.log('Starting...'.bold.green);
-  ws.send(JSON.stringify({ id: title + author, type: 'starting' }));
+  const id = author + '_' + title;
 
-  //load process.json
-  const savedTask = await readFile(new URL('../task.json', import.meta.url));
-  console.log('Task loaded'.bold.yellow);
-  task = JSON.parse(savedTask);
+  if (!link || !title) {
+    webSocket.send('Invalid input');
+    return;
+  }
+  if (!link.includes('soundcloud.com')) {
+    webSocket.send('Invalid link');
+    return;
+  }
+  console.log('Starting...', author + title);
 
-  //start auto- saving
-  setInterval(writeJson, 10000);
+  webSocket.send(
+    JSON.stringify({
+      type: 'init',
+      title,
+      author,
+    })
+  );
+
+  await download(link, id);
+  await generateVideo(id);
 };
