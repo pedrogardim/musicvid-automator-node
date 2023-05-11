@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "ui": "node app.js"
   },
   "dependencies": {
     "audio-decode": "^2.1.3",

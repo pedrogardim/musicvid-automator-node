@@ -1,25 +1,32 @@
 import { spawn } from 'child_process';
+import { webSocket } from '../app.js';
+
+//for testing
+// let webSocket = { send: () => {} };
 
 export const generateVideo = async (id) => {
   console.log('B > Video starting → ' + id);
 
+  // let duration;
+  let duration = 10;
+  let FPS = 30;
+
   const args = [
     '-y',
-    '-t',
-    '10',
+    ...(duration ? ['-t', duration] : []),
     '-i',
     `output/a/${id}.mp3`,
     '-loop',
     '1',
     '-framerate',
-    '30',
+    FPS,
     '-i',
     'assets/pic.jpg',
     '-i',
     'assets/logo.png',
     '-filter_complex',
     '"' +
-      '[0:a]aformat=channel_layouts=mono,showwaves=s=1280x720:mode=cline:r=30:colors=white[spectrum]' +
+      `[0:a]aformat=channel_layouts=mono,showwaves=s=1280x720:mode=cline:r=${FPS}:colors=white[spectrum]` +
       ';' +
       '[1:v]scale=1280:trunc(ow/a/2)*2[img]' +
       ';' +
@@ -47,23 +54,37 @@ export const generateVideo = async (id) => {
 
   const ffmpeg = spawn('ffmpeg', args, { shell: true });
 
+  let totalFrames;
+
   ffmpeg.stdout.on('data', function (data) {
     console.log('stdout: ' + data.toString());
   });
 
   ffmpeg.stderr.on('data', function (data) {
     const message = data.toString();
-    // console.log(message);
+
     // return;
+
+    if (message.includes('Duration: ') && !totalFrames) {
+      let i = message.indexOf('Duration: ') + 10;
+      let time = message.slice(i, i + 8);
+      let seconds =
+        duration || new Date('1970-01-01T' + time + 'Z').getTime() / 1000;
+      totalFrames = seconds * FPS;
+    }
     if (message.includes('frame=')) {
-      console.log(message.slice(6, 10));
+      const currentFrame = parseInt(message.slice(6, 11));
+      const prog = Math.floor((currentFrame * 100) / totalFrames);
+      webSocket.send(JSON.stringify({ type: 'videoProgress', prog, id }));
     }
     if (
       message.includes('cannot') ||
       message.includes('Error') ||
       message.includes('Invalid')
-    )
+    ) {
       console.log('❌' + message);
+      webSocket.send(message);
+    }
   });
 
   await new Promise((resolve, reject) => {
@@ -74,6 +95,8 @@ export const generateVideo = async (id) => {
   });
 
   console.log('B > Video finished ✅ → ' + id);
+  webSocket.send(JSON.stringify({ type: 'videoCompleted', id }));
+
   console.log(
     'Took ' + new Date(Date.now() - startDate).toTimeString().slice(3, 8) + 's'
   );

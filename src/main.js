@@ -25,5 +25,6 @@ export const initSongProcess = async ({ link, title, author, genre }) => {
   );
 
   await download(link, id);
+
   await generateVideo(id);
 };

@@ -24,8 +24,18 @@
         webSocket.send(JSON.stringify(obj));
       };
 
+      const getInfo = () => {
+        const url = document.getElementById('link').value;
+        webSocket.send(JSON.stringify({ type: 'getInfo', url }));
+      };
+
       const handleMessage = (message) => {
-        const { type, author, title, id } = message;
+        const { type, author, title, id, genre, prog } = message;
+        if (type === 'songInfo') {
+          ['title', 'author', 'genre', 'id'].forEach((key) => {
+            document.getElementById(key).value = message[key];
+          });
+        }
         if (type === 'init') {
           const songId = author + '_' + title;
           const li = document.createElement('li');
@@ -47,6 +57,14 @@
         if (type === 'downloadFinish') {
           const span = document.getElementById(id);
           span.innerHTML = 'Descargado ✅';
+        }
+        if (type === 'videoProgress') {
+          const span = document.getElementById(id);
+          span.innerHTML = `Generando Video... ${prog > 100 ? 100 : prog}%`;
+        }
+        if (type === 'videoCompleted') {
+          const span = document.getElementById(id);
+          span.innerHTML = `Video completo ✅`;
         }
       };
     </script>
@@ -70,6 +88,7 @@
           placeholder="Enlace de YouTube o SoundCloud"
           aria-label="Username"
           aria-describedby="basic-addon1"
+          onblur="getInfo()"
           id="link"
         />
       </div>
@@ -95,6 +114,13 @@
           placeholder="Genero"
           aria-label="Genero"
           id="genre"
+        />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="ID"
+          aria-label="ID"
+          id="id"
         />
       </div>
       <button

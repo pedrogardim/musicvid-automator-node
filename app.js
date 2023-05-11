@@ -4,6 +4,7 @@ import { WebSocketServer } from 'ws';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { initSongProcess } from './src/main.js';
+import { getSCInfo } from './src/utils/getSoundcloudInfo.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,7 +18,7 @@ express()
 
 const wss = new WebSocketServer({ port: 8080 });
 
-export let webSocket;
+export let webSocket = { send: () => {} };
 
 wss.on('connection', (ws) => {
   ws.on('error', console.error);
@@ -28,6 +29,9 @@ wss.on('connection', (ws) => {
     const parsedData = JSON.parse(data);
     if (parsedData.type === 'newSong') {
       initSongProcess(parsedData);
+    }
+    if (parsedData.type === 'getInfo') {
+      getSCInfo(parsedData.url);
     }
   });
 });
