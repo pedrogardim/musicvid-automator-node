@@ -23,5 +23,3 @@ export async function drawSpectrum({ canvas }, frames, duration) {
 
   return { onRender, onClose };
 }
-
-//hola
