@@ -2,6 +2,12 @@ import { readFile } from "fs/promises";
 // import { webSocket } from '../app.js';
 import { download } from "./fetch.js";
 import { generateVideo } from "./video.js";
+import { draw } from "./draw.js";
+
+export const appState = {
+  isAddingSong: false,
+  songs: {},
+};
 
 export const initSongProcess = async ({ link, title, author, genre }) => {
   const id = author + "_" + title;

@@ -1,4 +1,6 @@
 import { generateVideo } from "./src/video.js";
+import { initSongProcess } from "./src/main.js";
+import { draw } from "./src/draw.js";
 
 // generateVideo();
 // fetchAllVideosFromChannel()
@@ -7,4 +9,7 @@ import { generateVideo } from "./src/video.js";
 // download(
 //   'https://soundcloud.com/nassietheproducer/lil-uzi-i-just-wanna-rock-nxssie-remix-nxssiegang20-tiktok-moviee'
 // );
-generateVideo("fenorofficialdj-cano-que-bonita-fer-gomez-rumbaton-mashup");
+
+// initSongProcess("fenorofficialdj-cano-que-bonita-fer-gomez-rumbaton-mashup");
+
+draw();
