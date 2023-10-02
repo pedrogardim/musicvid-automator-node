@@ -14,5 +14,5 @@ It has some depedencies that are critical and may stop working, such as [`ytdl-c
 
 ####Run with docker ⚓️
 
-1. `docker build -t musicvid-automator`
+1. `docker build -t musicvid-automator .`
 2. `docker run -it --rm musicvid-automator`
