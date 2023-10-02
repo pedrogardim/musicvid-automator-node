@@ -1,36 +1,47 @@
 import { readFile } from "fs/promises";
-// import { webSocket } from '../app.js';
-import { download } from "./fetch.js";
+import { downloadFromYT } from "./fetch.js";
 import { generateVideo } from "./video.js";
 import { draw } from "./draw.js";
+import { getSCInfo } from "./utils/getSoundcloudInfo.js";
+import { getYTInfo } from "./utils/getYTInfo.js";
 
 export const appState = {
   isAddingSong: false,
+  errorMessage: "",
   songs: {},
 };
 
-export const initSongProcess = async ({ link, title, author, genre }) => {
-  const id = author + "_" + title;
+// export const initSongProcess = async ({ link, title, author, genre }) => {
+export const initSongProcess = async (url) => {
+  appState.errorMessage = "";
 
-  if (!link || !title) {
-    // webSocket.send('Invalid input');
+  if (!url.includes("youtube.com")) {
+    appState.errorMessage = "Invalid YouTube URL!";
+    draw();
     return;
   }
-  if (!link.includes("soundcloud.com")) {
-    // webSocket.send('Invalid link');
+
+  // const { id, title, author, genre } = await getSCInfo(soundcloudUrl);
+
+  const { title, videoId } = await getYTInfo(url);
+
+  if (appState.songs[videoId]) {
+    appState.errorMessage = "This video is already being generated";
+    draw();
     return;
   }
-  console.log("Starting...", author + title);
 
-  // webSocket.send(
-  //   JSON.stringify({
-  //     type: 'init',
-  //     title,
-  //     author,
-  //   })
-  // );
+  appState.songs[videoId] = {
+    title,
+    stage: "downloadingAudio",
+  };
 
-  await download(link, id);
+  draw();
 
-  await generateVideo(id);
+  await downloadFromYT(url, videoId);
+
+  appState.songs[videoId].stage = "renderingVideo";
+  draw();
+
+  await generateVideo(videoId);
 };

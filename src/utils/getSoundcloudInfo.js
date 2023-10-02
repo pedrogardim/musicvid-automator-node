@@ -1,20 +1,19 @@
-import fs from 'fs';
-import scdl from 'soundcloud-downloader';
-
-import { webSocket } from '../../app.js';
+import fs from "fs";
+import scdl from "soundcloud-downloader";
 
 export const getSCInfo = async (url, id) => {
-  const info = await scdl.default.getInfo(url);
-  const {
-    permalink,
-    title,
-    user: { username },
-    genre,
-  } = info;
-  console.log(info);
-  webSocket.send(
-    JSON.stringify({
-      type: 'songInfo',
+  try {
+    const info = await scdl.default.getInfo(
+      url,
+      "uYFraMlJAAH8lgtb7EcvnLisXA9mbSYx"
+    );
+    const {
+      permalink,
+      title,
+      user: { username },
+      genre,
+    } = info;
+    return {
       id: permalink,
       title,
       author: username,
@@ -22,8 +21,11 @@ export const getSCInfo = async (url, id) => {
         genre &&
         genre
           .match(/[A-Z][a-z]+|[0-9]+/g)
-          .join(',')
+          .join(",")
           .toLowerCase(),
-    })
-  );
+    };
+  } catch (e) {
+    // console.log(error);
+    return {};
+  }
 };

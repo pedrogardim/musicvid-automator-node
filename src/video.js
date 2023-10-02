@@ -1,12 +1,10 @@
 import { spawn } from "child_process";
-
-//for testing
-// let webSocket = { send: () => {} };
+import { appState } from "./main.js";
+import { draw } from "./draw.js";
 
 export const generateVideo = async (id) => {
-  console.log("B > Video starting → " + id);
-
   // let duration;
+  //TODO: fix duration
   let duration = 10;
   let FPS = 30;
 
@@ -74,15 +72,17 @@ export const generateVideo = async (id) => {
     if (message.includes("frame=")) {
       const currentFrame = parseInt(message.slice(6, 11));
       const prog = Math.floor((currentFrame * 100) / totalFrames);
-      // webSocket.send(JSON.stringify({ type: 'videoProgress', prog, id }));
+      appState.songs[id].stage = "renderingVideo";
+      appState.songs[id].progress = prog;
+      draw();
     }
     if (
       message.includes("cannot") ||
       message.includes("Error") ||
       message.includes("Invalid")
     ) {
-      console.log("❌" + message);
-      // webSocket.send(message);
+      appState.errorMessage = message;
+      draw();
     }
   });
 
@@ -93,10 +93,7 @@ export const generateVideo = async (id) => {
     ffmpeg.on("exit", resolve);
   });
 
-  console.log("B > Video finished ✅ → " + id);
-  // webSocket.send(JSON.stringify({ type: "videoCompleted", id }));
-
-  console.log(
-    "Took " + new Date(Date.now() - startDate).toTimeString().slice(3, 8) + "s"
-  );
+  appState.songs[id].stage = "videoFinished";
+  delete appState.songs[id].progress;
+  draw();
 };
