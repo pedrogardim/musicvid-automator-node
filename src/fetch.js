@@ -17,7 +17,6 @@ export const downloadFromYT = async (url, id) =>
         reject();
       })
       .on("finish", () => {
-        console.log("A > Download finished ✅ → " + id);
         appState.songs[id].stage = "downloadAudioFinished";
         draw();
         resolve();

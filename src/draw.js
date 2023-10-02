@@ -26,6 +26,16 @@ export const draw = async () => {
           color = "green";
           stageIndex = 2;
           break;
+        case "renderingVideo":
+          stageLabel = "Rendering video 🌌";
+          color = "magenta";
+          stageIndex = 3;
+          break;
+        case "videoFinished":
+          stageLabel = "Video finished 🌌 ✅";
+          color = "green";
+          stageIndex = 4;
+          break;
         default:
           break;
       }
@@ -33,7 +43,9 @@ export const draw = async () => {
         `${i + 1}. ${e.title.slice(
           0,
           25
-        )}... | Stage ${stageIndex}: ${stageLabel}`[color]
+        )}... | Stage ${stageIndex}: ${stageLabel} ${
+          !isNaN(e.progress) ? e.progress + "%" : ""
+        }`[color]
       );
     });
   }

@@ -40,5 +40,8 @@ export const initSongProcess = async (url) => {
 
   await downloadFromYT(url, videoId);
 
-  // await generateVideo(id);
+  appState.songs[videoId].stage = "renderingVideo";
+  draw();
+
+  await generateVideo(videoId);
 };
