@@ -16,6 +16,11 @@ export const draw = async () => {
       let color;
       let stageIndex;
       switch (e.stage) {
+        case "gettingInfo":
+          stageLabel = "Getting info ⬇ ℹ️";
+          color = "brightCyan";
+          stageIndex = 1;
+          break;
         case "downloadingAudio":
           stageLabel = "Downloading audio 🔊";
           color = "cyan";

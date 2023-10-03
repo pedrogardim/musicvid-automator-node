@@ -21,9 +21,18 @@ export const initSongProcess = async (url) => {
     return;
   }
 
+  appState.songs[url] = {
+    title: "Loading title",
+    stage: "gettingInfo",
+  };
+
+  draw();
+
   // const { id, title, author, genre } = await getSCInfo(soundcloudUrl);
 
   const { title, videoId } = await getYTInfo(url);
+
+  delete appState.songs[url];
 
   if (appState.songs[videoId]) {
     appState.errorMessage = "This video is already being generated";
