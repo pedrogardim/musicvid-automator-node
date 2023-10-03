@@ -3,6 +3,11 @@ import { appState } from "./main.js";
 import { select, input } from "@inquirer/prompts";
 import { initSongProcess } from "./main.js";
 
+//TEMP
+import events from "events";
+
+events.EventEmitter.defaultMaxListeners = 9999;
+
 export const draw = async () => {
   console.clear();
   process.stdout.write("\x1Bc");
