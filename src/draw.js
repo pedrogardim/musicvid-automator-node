@@ -3,6 +3,11 @@ import { appState } from "./main.js";
 import { select, input } from "@inquirer/prompts";
 import { initSongProcess } from "./main.js";
 
+//TEMP
+import events from "events";
+
+events.EventEmitter.defaultMaxListeners = 9999;
+
 export const draw = async () => {
   console.clear();
   process.stdout.write("\x1Bc");
@@ -16,14 +21,14 @@ export const draw = async () => {
       let color;
       let stageIndex;
       switch (e.stage) {
+        case "gettingInfo":
+          stageLabel = "Getting info ⬇ ℹ️";
+          color = "brightCyan";
+          stageIndex = 1;
+          break;
         case "downloadingAudio":
           stageLabel = "Downloading audio 🔊";
           color = "cyan";
-          stageIndex = 1;
-          break;
-        case "downloadAudioFinished":
-          stageLabel = "Audio downloaded 🔊 ✅";
-          color = "green";
           stageIndex = 2;
           break;
         case "renderingVideo":
@@ -31,10 +36,15 @@ export const draw = async () => {
           color = "magenta";
           stageIndex = 3;
           break;
-        case "videoFinished":
-          stageLabel = "Video finished 🌌 ✅";
-          color = "green";
+        case "uploadingVideo":
+          stageLabel = "Uploading video ⬆";
+          color = "brightYellow";
           stageIndex = 4;
+          break;
+        case "done":
+          stageLabel = "Everything done ✅";
+          color = "green";
+          stageIndex = 5;
           break;
         default:
           break;

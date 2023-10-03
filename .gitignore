@@ -3,4 +3,6 @@ node_modules
 
 yarn-error.log
 
+client_secret.json
+
 .env
