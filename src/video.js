@@ -92,8 +92,4 @@ export const generateVideo = async (id) => {
     });
     ffmpeg.on("exit", resolve);
   });
-
-  appState.songs[id].stage = "videoFinished";
-  delete appState.songs[id].progress;
-  draw();
 };
