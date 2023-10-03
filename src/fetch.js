@@ -9,7 +9,10 @@ dotenv.config();
 
 export const downloadFromYT = async (url, id) =>
   new Promise((resolve, reject) => {
-    ytdl(url)
+    ytdl(url, {
+      filter: "audioonly",
+      quality: "highestaudio",
+    })
       .pipe(fs.createWriteStream(`output/a/${id}.mp3`))
       .on("error", (e) => {
         appState.errorMessage = e.message;
