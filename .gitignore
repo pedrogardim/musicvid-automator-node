@@ -6,3 +6,4 @@ yarn-error.log
 client_secret.json
 
 .env
+client_oauth_token.json

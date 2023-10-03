@@ -4,7 +4,7 @@ import { google } from "googleapis";
 const OAuth2 = google.auth.OAuth2;
 
 const SCOPES = ["https://www.googleapis.com/auth/youtube.upload"];
-const TOKEN_PATH = "../" + "client_oauth_token.json";
+const TOKEN_PATH = "./" + "client_oauth_token.json";
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
