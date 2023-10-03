@@ -29,11 +29,6 @@ export const draw = async () => {
         case "downloadingAudio":
           stageLabel = "Downloading audio 🔊";
           color = "cyan";
-          stageIndex = 1;
-          break;
-        case "downloadAudioFinished":
-          stageLabel = "Audio downloaded 🔊 ✅";
-          color = "green";
           stageIndex = 2;
           break;
         case "renderingVideo":
@@ -41,10 +36,15 @@ export const draw = async () => {
           color = "magenta";
           stageIndex = 3;
           break;
-        case "videoFinished":
-          stageLabel = "Video finished 🌌 ✅";
-          color = "green";
+        case "uploadingVideo":
+          stageLabel = "Uploading video ⬆";
+          color = "brightYellow";
           stageIndex = 4;
+          break;
+        case "done":
+          stageLabel = "Everything done ✅";
+          color = "green";
+          stageIndex = 5;
           break;
         default:
           break;

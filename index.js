@@ -1,15 +1,11 @@
-import { generateVideo } from "./src/video.js";
-import { initSongProcess } from "./src/main.js";
+import fs from "fs";
+import { authorize } from "./src/upload/auth.js";
 import { draw } from "./src/draw.js";
 
-// generateVideo();
-// fetchAllVideosFromChannel()
-
-// await init();
-// download(
-//   'https://soundcloud.com/nassietheproducer/lil-uzi-i-just-wanna-rock-nxssie-remix-nxssiegang20-tiktok-moviee'
-// );
-
-// initSongProcess("fenorofficialdj-cano-que-bonita-fer-gomez-rumbaton-mashup");
-
-draw();
+fs.readFile("client_secret.json", (err, content) => {
+  if (err) {
+    console.log("Error loading client secret file: " + err);
+    return;
+  }
+  authorize(JSON.parse(content), () => draw());
+});

@@ -4,6 +4,7 @@ import { generateVideo } from "./video.js";
 import { draw } from "./draw.js";
 import { getSCInfo } from "./utils/getSoundcloudInfo.js";
 import { getYTInfo } from "./utils/getYTInfo.js";
+import { authUpload } from "./upload/upload.js";
 
 export const appState = {
   isAddingSong: false,
@@ -53,4 +54,16 @@ export const initSongProcess = async (url) => {
   draw();
 
   await generateVideo(videoId);
+
+  appState.songs[videoId].stage = "uploadingVideo";
+  draw();
+
+  await authUpload(videoId, {
+    title: "test",
+    description: "test description",
+    tags: ["test1", "test2", "test3", "test4"],
+  });
+
+  appState.songs[videoId].stage = "done";
+  draw();
 };
